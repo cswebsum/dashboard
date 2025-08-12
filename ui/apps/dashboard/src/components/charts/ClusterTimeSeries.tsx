@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Card } from 'antd';
 import { Line } from '@ant-design/plots';
-import type { Cluster } from '@/features/clusters';
+import type { Cluster } from '@/features/clusters/types';
 
 export interface ClusterTimeSeriesProps {
   clusters: Cluster[];
