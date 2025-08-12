@@ -16,10 +16,13 @@ limitations under the License.
 
 import i18nInstance from '@/utils/i18n';
 import Panel from '@/components/panel';
-import { Badge, Descriptions, DescriptionsProps, Statistic, Spin } from 'antd';
+import { Badge, Descriptions, DescriptionsProps, Statistic, Spin, Tabs } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { GetOverview } from '@/services/overview.ts';
 import dayjs from 'dayjs';
+import { useClusters } from '@/features/clusters';
+import { ClusterTopology } from '@/components/charts/ClusterTopology';
+import { ClusterTimeSeries } from '@/components/charts/ClusterTimeSeries';
 
 const Overview = () => {
   const { data, isLoading } = useQuery({
@@ -29,6 +32,7 @@ const Overview = () => {
       return ret.data;
     },
   });
+  const { data: clusters } = useClusters();
   const basicItems: DescriptionsProps['items'] = [
     {
       key: 'karmada-version',
@@ -206,26 +210,39 @@ const Overview = () => {
   ];
 
   return (
-    <Spin spinning={isLoading}>
-      <Panel>
-        <Descriptions
-          className={'mt-8'}
-          title={i18nInstance.t('9e5ffa068ed435ced73dc9bf5dd8e09c', '基本信息')}
-          bordered
-          items={basicItems}
-        />
-
-        <Descriptions
-          className={'mt-8'}
-          title={i18nInstance.t('ba584c3d8a7e637efe00449e0c93900c', '资源信息')}
-          bordered
-          items={resourceItems}
-          labelStyle={{
-            width: i18nInstance.language === 'en-US' ? '200px' : '150px',
-          }}
-        />
-      </Panel>
-    </Spin>
+    <Panel>
+      {isLoading ? (
+        <Spin />
+      ) : (
+        <div className={"p-[12px]"}>
+          <div className={"flex flex-row gap-4"}>
+            <div className={"grow"}>
+              <Descriptions column={2} bordered title={i18nInstance.t('f5b8933bca46d6b58fc7244b61fa886d','基础信息')} items={basicItems} />
+            </div>
+            <div className={"min-w-[260px] flex flex-col gap-4"}>
+              <Statistic title={i18nInstance.t('a4e6c34dcb5b0898f1d9e5c244f2b6c5','工作集群数量')} value={data?.clusterStatistics.total} />
+              <Statistic title={i18nInstance.t('b0d0c3573d3b3106d3f1c9d0a01634f2','工作负载数量')} value={data?.workloadStatistics.total} />
+            </div>
+          </div>
+          <div className="mt-6">
+            <Tabs
+              items={[
+                {
+                  key: 'topology',
+                  label: i18nInstance.t('c2b4f5e7f44a48b791d1ad63dc3f29e2', '拓扑视图'),
+                  children: clusters ? <ClusterTopology clusters={clusters} /> : null,
+                },
+                {
+                  key: 'timeseries',
+                  label: i18nInstance.t('c3b09b7f0c2b4cc295dd1f5a7d4b5c1a', '时间序列'),
+                  children: clusters ? <ClusterTimeSeries clusters={clusters} /> : null,
+                },
+              ]}
+            />
+          </div>
+        </div>
+      )}
+    </Panel>
   );
 };
 

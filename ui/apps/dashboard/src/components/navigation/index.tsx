@@ -27,6 +27,7 @@ import {
 import { Dropdown } from 'antd';
 import { Icons } from '@/components/icons';
 import { useThemeStore } from '@/store/theme';
+import { useAuthzStore } from '@/stores/authz';
 
 export interface IUserInfo {
   id: number;
@@ -51,6 +52,8 @@ const Navigation: FC<INavigationProps> = (props) => {
     onTerminalClick,
   } = props;
   const { theme, toggleTheme } = useThemeStore();
+  const roles = useAuthzStore((s) => s.roles);
+  const setRoles = useAuthzStore((s) => s.setRoles);
   return (
     <>
       <div className={styles.navbar}>
@@ -85,6 +88,27 @@ const Navigation: FC<INavigationProps> = (props) => {
                 <Icons.sun width={20} height={20} />
               )}
             </div>
+
+            {/* dev-only role switcher */}
+            {import.meta.env.DEV && (
+              <div className={styles.extra}>
+                <Dropdown
+                  menu={{
+                    onClick: ({ key }) => setRoles([key as any]),
+                    selectedKeys: roles,
+                    items: [
+                      { key: 'viewer', label: 'viewer' },
+                      { key: 'operator', label: 'operator' },
+                      { key: 'admin', label: 'admin' },
+                    ],
+                  }}
+                  placement="bottomLeft"
+                  arrow
+                >
+                  <div>role: {roles[0]}</div>
+                </Dropdown>
+              </div>
+            )}
 
             {/* i18n switch */}
             <div className={styles.extra}>
