@@ -35,8 +35,10 @@ func init() {
 
 	router = gin.Default()
 	_ = router.SetTrustedProxies(nil)
+	router.Use(RequestLogger())
+	router.Use(SessionMiddleware())
 	v1 = router.Group("/api/v1")
-	member = v1.Group("/member/:clustername")
+	member = v1.Group("/api/v1/member/:clustername")
 	member.Use(EnsureMemberClusterMiddleware())
 
 	router.GET("/livez", func(c *gin.Context) {

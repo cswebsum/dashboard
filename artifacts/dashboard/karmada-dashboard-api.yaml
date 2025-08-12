@@ -39,6 +39,36 @@ spec:
           env:
             - name: GIN_MODE
               value: release
+            - name: OIDC_ISSUER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: oidc_issuer_url
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: oidc_client_id
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: oidc_client_secret
+            - name: OIDC_REDIRECT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: oidc_redirect_url
+            - name: LDAP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: ldap_host
+            - name: DASHBOARD_SA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dashboard-auth
+                  key: sa_token
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -100,3 +130,25 @@ spec:
   selector:
     app: karmada-dashboard-api
   type: ClusterIP
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: karmada-dashboard-sar
+rules:
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: karmada-dashboard-sar
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: karmada-dashboard-sar
+subjects:
+  - kind: ServiceAccount
+    name: karmada-dashboard
+    namespace: karmada-system

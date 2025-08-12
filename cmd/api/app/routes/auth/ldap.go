@@ -17,8 +17,10 @@ limitations under the License.
 package auth
 
 import (
+	"encoding/json"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	ldap "github.com/go-ldap/ldap/v3"
@@ -49,12 +51,24 @@ func handleLDAPLogin(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
-	// Simple bind as the user
 	if err := conn.Bind(req.Username, req.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, common.BaseResponse{Code: 401, Msg: "invalid credentials"})
 		return
 	}
-	// TODO: Issue session cookie and map LDAP groups to roles
+	s := struct{
+		User string `json:"user"`
+		Groups []string `json:"groups"`
+	}{User: req.Username, Groups: []string{"ldap"}}
+	b, _ := json.Marshal(s)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "karmada_session",
+		Value:    string(b),
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		Expires:  time.Now().Add(24 * time.Hour),
+	})
 	c.JSON(http.StatusOK, common.BaseResponse{Code: 200, Msg: "ok"})
 }
 

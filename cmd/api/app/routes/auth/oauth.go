@@ -18,8 +18,10 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -81,6 +83,21 @@ func handleOAuthCallback(c *gin.Context) {
 		return
 	}
 	// TODO: Retrieve userinfo with the token from provider and establish session/cookie
+	// For demo, set user as "oidc-user" and group as ["oidc"]
+	s := struct{
+		User string `json:"user"`
+		Groups []string `json:"groups"`
+	}{User: "oidc-user", Groups: []string{"oidc"}}
+	b, _ := json.Marshal(s)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "karmada_session",
+		Value:    string(b),
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		Expires:  time.Now().Add(24 * time.Hour),
+	})
 	c.JSON(http.StatusOK, common.BaseResponse{Code: 200, Msg: "ok", Data: map[string]any{"access_token": tok.AccessToken}})
 }
 
