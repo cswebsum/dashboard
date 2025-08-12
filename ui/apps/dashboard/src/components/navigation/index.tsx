@@ -26,6 +26,7 @@ import {
 } from '@/utils/i18n';
 import { Dropdown } from 'antd';
 import { Icons } from '@/components/icons';
+import { useThemeStore } from '@/store/theme';
 
 export interface IUserInfo {
   id: number;
@@ -49,6 +50,7 @@ const Navigation: FC<INavigationProps> = (props) => {
     userInfo,
     onTerminalClick,
   } = props;
+  const { theme, toggleTheme } = useThemeStore();
   return (
     <>
       <div className={styles.navbar}>
@@ -74,6 +76,15 @@ const Navigation: FC<INavigationProps> = (props) => {
               className={styles.terminalIcon}
               onClick={() => onTerminalClick?.()}
             />
+
+            {/* theme toggle */}
+            <div className={styles.extra} onClick={toggleTheme}>
+              {theme === 'light' ? (
+                <Icons.moon width={20} height={20} />
+              ) : (
+                <Icons.sun width={20} height={20} />
+              )}
+            </div>
 
             {/* i18n switch */}
             <div className={styles.extra}>

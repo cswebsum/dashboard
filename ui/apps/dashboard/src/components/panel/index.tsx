@@ -16,21 +16,14 @@ limitations under the License.
 
 import { FC, ReactNode, useMemo } from 'react';
 import { useMatches } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, type BreadcrumbProps } from 'antd';
 import { getRoutes, IRouteObjectHandle } from '@/routes/route.tsx';
-import * as React from 'react';
 
 interface IPanelProps {
   children: ReactNode;
 }
 
-interface MenuItem {
-  key?: React.Key;
-  title?: React.ReactNode;
-  label?: React.ReactNode;
-  path?: string;
-  href?: string;
-}
+type MenuItem = NonNullable<BreadcrumbProps['items']>[number];
 
 const Panel: FC<IPanelProps> = (props) => {
   const { children } = props;
@@ -48,11 +41,9 @@ const Panel: FC<IPanelProps> = (props) => {
         if (ptr.children[i].handle?.sidebarKey === _sideBarKey) {
           menuItems.push({
             title:
-              isPage && filteredMatches[idx].pathname ? (
-                <a>{ptr.children[i].handle?.sidebarName}</a>
-              ) : (
-                ptr.children[i].handle?.sidebarName
-              ),
+              isPage && filteredMatches[idx].pathname
+                ? ptr.children[i].handle?.sidebarName
+                : ptr.children[i].handle?.sidebarName,
           });
           ptr = ptr.children[i];
         }
