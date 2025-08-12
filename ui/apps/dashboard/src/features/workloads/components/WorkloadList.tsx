@@ -3,7 +3,7 @@ import { Card, Empty } from 'antd';
 import { useWorkloads } from '../hooks';
 
 export const WorkloadList: React.FC = () => {
-  const { data, isLoading } = useWorkloads();
+  const { isLoading } = useWorkloads();
   return (
     <Card title="Workloads">
       {isLoading ? 'Loading...' : <Empty description="No workloads" />}

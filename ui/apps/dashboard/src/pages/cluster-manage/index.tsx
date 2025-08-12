@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import i18nInstance from '@/utils/i18n';
 import Panel from '@/components/panel';
 import { message } from 'antd';
 import NewClusterModal from './new-cluster-modal';
@@ -22,21 +21,9 @@ import { useState } from 'react';
 import { ClusterList } from '@/features/clusters';
 import { useClusterEvents } from '@/features/clusters';
 import { useClusterDetail } from '@/features/clusters';
-import { RequireRole } from '@/components/auth';
 import { ClusterResourceSummary } from '@/components/charts/ClusterResourceSummary';
 import { useClusters } from '@/features/clusters';
-function getPercentColor(v: number): string {
-  // 0~60 #52C41A
-  // 60~80 #FAAD14
-  // > 80 #F5222D
-  if (v <= 60) {
-    return '#52C41A';
-  } else if (v <= 80) {
-    return '#FAAD14';
-  } else {
-    return '#F5222D';
-  }
-}
+
 const ClusterManagePage = () => {
   useClusterEvents();
   const [messageApi, messageContextHolder] = message.useMessage();
@@ -81,4 +68,5 @@ const ClusterManagePage = () => {
     </Panel>
   );
 };
+
 export default ClusterManagePage;

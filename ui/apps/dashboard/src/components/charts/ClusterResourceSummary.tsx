@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Progress, Statistic, Row, Col } from 'antd';
-import type { Cluster } from '@/features/clusters';
+import type { Cluster } from '@/features/clusters/types';
 
 function color(percent: number) {
   if (percent <= 60) return '#52C41A';
