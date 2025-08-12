@@ -140,74 +140,7 @@ const Overview = () => {
     },
   ];
 
-  const resourceItems: DescriptionsProps['items'] = [
-    {
-      key: 'policy-info',
-      label: i18nInstance.t('85c6051762df2fe8f93ebc1083b7f6a4', '策略信息'),
-      children: (
-        <div className="flex flex-row space-x-4">
-          <Statistic
-            title={i18nInstance.t(
-              'a95abe7b8eeb55427547e764bf39f1c4',
-              '调度策略',
-            )}
-            value={data?.clusterResourceStatus.propagationPolicyNum}
-          />
-
-          <Statistic
-            title={i18nInstance.t(
-              '0a7e9443c41575378d2db1e288d3f1cb',
-              '差异化策略',
-            )}
-            value={data?.clusterResourceStatus.overridePolicyNum}
-          />
-        </div>
-      ),
-
-      span: 3,
-    },
-    {
-      key: 'multicloud-resources-info',
-      label: i18nInstance.t('612af712ef5ed7868a6b2f1d3d68530c', '多云资源信息'),
-      children: (
-        <div className="flex flex-row space-x-4">
-          <Statistic
-            title={i18nInstance.t(
-              '1200778cf86309309154ef88804fa22e',
-              '多云命名空间',
-            )}
-            value={data?.clusterResourceStatus.namespaceNum}
-          />
-
-          <Statistic
-            title={i18nInstance.t(
-              '3692cf6a2e079d34e7e5035aa98b1335',
-              '多云工作负载',
-            )}
-            value={data?.clusterResourceStatus.workloadNum}
-          />
-
-          <Statistic
-            title={i18nInstance.t(
-              '2030a6e845ad6476fecbc1711c9f139d',
-              '多云服务与路由',
-            )}
-            value={data?.clusterResourceStatus.serviceNum}
-          />
-
-          <Statistic
-            title={i18nInstance.t(
-              '0287028ec7eefa1333b56ee340d325a0',
-              '多云配置与秘钥',
-            )}
-            value={data?.clusterResourceStatus.configNum}
-          />
-        </div>
-      ),
-
-      span: 3,
-    },
-  ];
+  // resource summary shown via charts/tabs below
 
   return (
     <Panel>
