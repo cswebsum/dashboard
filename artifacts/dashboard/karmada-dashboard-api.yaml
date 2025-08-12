@@ -31,6 +31,8 @@ spec:
             - --context=karmada
             - --insecure-bind-address=0.0.0.0
             - --bind-address=0.0.0.0
+            - --tls-cert-file=/etc/tls/tls.crt
+            - --tls-key-file=/etc/tls/tls.key
           name: karmada-dashboard-api
           image: karmada/karmada-dashboard-api:latest
           imagePullPolicy: IfNotPresent
@@ -65,12 +67,18 @@ spec:
             - name: kubeconfig
               subPath: kubeconfig
               mountPath: /etc/kubeconfig
+            - name: tls
+              mountPath: /etc/tls
+              readOnly: true
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       volumes:
         - name: kubeconfig
           secret:
             secretName: kubeconfig
+        - name: tls
+          secret:
+            secretName: karmada-dashboard-tls
 ---
 apiVersion: v1
 kind: Service
@@ -81,10 +89,14 @@ metadata:
     app: karmada-dashboard-api
 spec:
   ports:
-    - name: karmada-dashboard-api
+    - name: http
       port: 8000
       protocol: TCP
       targetPort: 8000
+    - name: https
+      port: 8001
+      protocol: TCP
+      targetPort: 8001
   selector:
     app: karmada-dashboard-api
   type: ClusterIP

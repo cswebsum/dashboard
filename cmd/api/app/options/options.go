@@ -37,6 +37,8 @@ type Options struct {
 	Namespace                     string
 	DisableCSRFProtection         bool
 	OpenAPIEnabled                bool
+	TLSCertFile                   string
+	TLSKeyFile                    string
 }
 
 // NewOptions returns initialized Options.
@@ -62,4 +64,6 @@ func (o *Options) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&o.Namespace, "namespace", "karmada-dashboard", "Namespace to use when accessing Dashboard specific resources, i.e. configmap")
 	fs.BoolVar(&o.DisableCSRFProtection, "disable-csrf-protection", false, "allows disabling CSRF protection")
 	fs.BoolVar(&o.OpenAPIEnabled, "openapi-enabled", false, "enables OpenAPI v2 endpoint under '/apidocs.json'")
+	fs.StringVar(&o.TLSCertFile, "tls-cert-file", "/etc/tls/tls.crt", "Path to TLS certificate file")
+	fs.StringVar(&o.TLSKeyFile, "tls-key-file", "/etc/tls/tls.key", "Path to TLS private key file")
 }

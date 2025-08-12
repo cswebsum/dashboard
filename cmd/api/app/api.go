@@ -19,6 +19,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/karmada-io/karmada/pkg/sharedcli/klogflag"
@@ -49,6 +50,7 @@ import (
 	_ "github.com/karmada-io/dashboard/cmd/api/app/routes/statefulset"              // Importing route packages forces route registration
 	_ "github.com/karmada-io/dashboard/cmd/api/app/routes/terminal"                 // Importing route packages forces route registration
 	_ "github.com/karmada-io/dashboard/cmd/api/app/routes/unstructured"             // Importing route packages forces route registration
+	_ "github.com/karmada-io/dashboard/cmd/api/app/routes/metrics"                  // Importing route packages forces route registration
 	"github.com/karmada-io/dashboard/pkg/client"
 	"github.com/karmada-io/dashboard/pkg/config"
 	"github.com/karmada-io/dashboard/pkg/environment"
@@ -137,8 +139,13 @@ func ensureAPIServerConnectionOrDie() {
 
 func serve(opts *options.Options) {
 	insecureAddress := fmt.Sprintf("%s:%d", opts.InsecureBindAddress, opts.InsecurePort)
-	klog.V(1).InfoS("Listening and serving on", "address", insecureAddress)
+	secureAddress := fmt.Sprintf("%s:%d", opts.BindAddress, opts.Port)
+	klog.V(1).InfoS("Listening and serving on", "https", secureAddress, "http", insecureAddress)
 	go func() {
 		klog.Fatal(router.Router().Run(insecureAddress))
+	}()
+	go func() {
+		server := &http.Server{Addr: secureAddress, Handler: router.Router()}
+		klog.Fatal(server.ListenAndServeTLS(opts.TLSCertFile, opts.TLSKeyFile))
 	}()
 }
