@@ -19,13 +19,10 @@ import { FC, useEffect, useState } from 'react';
 import { Modal, Form, Input, Radio, Button, Select, Divider } from 'antd';
 import TextareaWithUpload from '@/components/textarea-with-upload';
 import { Icons } from '@/components/icons';
-import {
-  ClusterDetail,
-  CreateCluster,
-  UpdateCluster,
-} from '@/services/cluster';
+import { ClusterDetail } from '@/services/cluster';
 import type { LabelParam, TaintParam } from '@/services/cluster';
 import { IResponse } from '@/services/base.ts';
+import { useCreateCluster, useUpdateCluster } from '@/features/clusters';
 
 export interface NewClusterModalProps {
   mode: 'create' | 'edit';
@@ -66,6 +63,8 @@ const NewClusterModal: FC<NewClusterModalProps> = (props) => {
     mode !== 'create',
   );
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const createMutation = useCreateCluster();
+  const updateMutation = useUpdateCluster();
   useEffect(() => {
     setShowAdvancedConfig(mode !== 'create');
   }, [mode]);
@@ -108,18 +107,18 @@ const NewClusterModal: FC<NewClusterModalProps> = (props) => {
           setConfirmLoading(true);
           const submitData = await form.validateFields();
           if (mode === 'edit') {
-            const ret = await UpdateCluster({
+            const ret = await updateMutation.mutateAsync({
               clusterName: submitData.clusterName,
               labels: submitData.labels,
               taints: submitData.taints,
-            });
+            } as any);
             onOk(ret);
           } else if (mode === 'create') {
-            const ret = await CreateCluster({
+            const ret = await createMutation.mutateAsync({
               clusterName: submitData.clusterName,
               kubeconfig: submitData.kubeconfig,
               mode: submitData.mode,
-            });
+            } as any);
             onOk(ret);
           }
         } catch (e) {
