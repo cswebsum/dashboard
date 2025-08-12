@@ -14,4 +14,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export { default as KarmadaTerminal } from './karmada-terminal.tsx';
+export { KarmadaTerminal } from './karmada-terminal.tsx';

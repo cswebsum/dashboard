@@ -86,7 +86,7 @@ const KarmadaTerminal: React.FC<KarmadaTerminalProps> = ({
           terminal.connect();
           setIsLoading(false);
         })
-        .catch((err) => {
+        .catch((err: unknown) => {
           console.error('get sessionId error', err);
           setIsLoading(false);
         });
@@ -142,11 +142,10 @@ const KarmadaTerminal: React.FC<KarmadaTerminalProps> = ({
         style={{
           width: '100%',
           height: 'calc(100% - 20px)',
-          visibility: !isLoading ? 'visible' : 'hidden',
         }}
       />
     </div>
   );
 };
 
-export default KarmadaTerminal;
+export { KarmadaTerminal };
