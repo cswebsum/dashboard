@@ -25,6 +25,7 @@ import {
 import { Me } from '@/services/auth.ts';
 import { karmadaClient } from '@/services';
 import { useQuery } from '@tanstack/react-query';
+import { RequireRole } from './RequireRole';
 
 const AuthContext = createContext<{
   authenticated: boolean;
@@ -88,3 +89,4 @@ export const useAuth = () => {
 };
 
 export default AuthProvider;
+export { RequireRole };

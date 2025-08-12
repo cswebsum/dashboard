@@ -39,6 +39,8 @@ import {
 import { Icons } from '@/components/icons';
 import NewClusterModal from './new-cluster-modal';
 import { useState } from 'react';
+import { ClusterList } from '@/features/clusters';
+import { useClusterEvents } from '@/features/clusters';
 function getPercentColor(v: number): string {
   // 0~60 #52C41A
   // 60~80 #FAAD14
@@ -52,6 +54,7 @@ function getPercentColor(v: number): string {
   }
 }
 const ClusterManagePage = () => {
+  useClusterEvents();
   const [messageApi, messageContextHolder] = message.useMessage();
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['GetClusters'],
@@ -68,6 +71,12 @@ const ClusterManagePage = () => {
     mode: 'create',
     open: false,
   });
+  // New feature-based list (progressive adoption)
+  // return (
+  //   <Panel>
+  //     <ClusterList onCreate={() => setModalData({ mode: 'create', open: true })} />
+  //   </Panel>
+  // );
   const columns: TableColumnProps<Cluster>[] = [
     {
       title: i18nInstance.t('c3f28b34bbdec501802fa403584267e6', '集群名称'),
