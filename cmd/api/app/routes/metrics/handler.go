@@ -14,6 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { LoginOAuth } from './LoginOAuth';
+package metrics
 
-export default LoginOAuth;
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/karmada-io/dashboard/cmd/api/app/router"
+)
+
+func init() {
+	r := router.Router()
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+}

@@ -22,6 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/klog/v2"
 
 	"github.com/karmada-io/dashboard/cmd/api/app/types/common"
 	"github.com/karmada-io/dashboard/pkg/client"
@@ -39,6 +40,23 @@ func EnsureMemberClusterMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
+		c.Next()
+	}
+}
+
+// RBACMiddleware is a placeholder for checking access to resource actions.
+func RBACMiddleware(resource string, verb string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// TODO: integrate Karmada RBAC check via SubjectAccessReview or client-go authz API
+		klog.V(3).InfoS("RBAC check", "resource", resource, "verb", verb)
+		c.Next()
+	}
+}
+
+// RequestLogger logs basic request info.
+func RequestLogger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		klog.InfoS("HTTP", "method", c.Request.Method, "path", c.FullPath())
 		c.Next()
 	}
 }
