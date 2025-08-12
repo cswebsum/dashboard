@@ -220,8 +220,8 @@ const Overview = () => {
               <Descriptions column={2} bordered title={i18nInstance.t('f5b8933bca46d6b58fc7244b61fa886d','基础信息')} items={basicItems} />
             </div>
             <div className={"min-w-[260px] flex flex-col gap-4"}>
-              <Statistic title={i18nInstance.t('a4e6c34dcb5b0898f1d9e5c244f2b6c5','工作集群数量')} value={data?.clusterStatistics.total} />
-              <Statistic title={i18nInstance.t('b0d0c3573d3b3106d3f1c9d0a01634f2','工作负载数量')} value={data?.workloadStatistics.total} />
+              <Statistic title={i18nInstance.t('a4e6c34dcb5b0898f1d9e5c244f2b6c5','命名空间数量')} value={data?.clusterResourceStatus.namespaceNum} />
+              <Statistic title={i18nInstance.t('b0d0c3573d3b3106d3f1c9d0a01634f2','工作负载数量')} value={data?.clusterResourceStatus.workloadNum} />
             </div>
           </div>
           <div className="mt-6">

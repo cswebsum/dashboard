@@ -19,6 +19,12 @@ const config: Config = {
       },
     ],
   },
+  collectCoverageFrom: [
+    'src/features/**/*.{ts,tsx}',
+    'src/pages/**/*.{ts,tsx}',
+    'src/components/**/*.{ts,tsx}',
+    '!src/**/index.ts',
+  ],
   coverageThreshold: {
     global: {
       branches: 75,
