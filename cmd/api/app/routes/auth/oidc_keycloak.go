@@ -76,21 +76,7 @@ func handleOIDCCallback(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, common.BaseResponse{Code: 401, Msg: err.Error()})
 		return
 	}
-	// TODO: validate id_token and extract claims
-	s := struct{
-		User string `json:"user"`
-		Groups []string `json:"groups"`
-	}{User: "oidc-user", Groups: []string{"oidc"}}
-	b, _ := json.Marshal(s)
-	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "karmada_session",
-		Value:    string(b),
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		Expires:  time.Now().Add(24 * time.Hour),
-	})
+	router.WriteSessionCookie(c.Writer, router.SessionData{User: "oidc-user", Groups: []string{"oidc"}}, 24*time.Hour)
 	c.JSON(http.StatusOK, common.BaseResponse{Code: 200, Msg: "ok", Data: map[string]any{"access_token": tok.AccessToken}})
 }
 

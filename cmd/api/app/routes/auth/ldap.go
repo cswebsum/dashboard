@@ -55,20 +55,7 @@ func handleLDAPLogin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, common.BaseResponse{Code: 401, Msg: "invalid credentials"})
 		return
 	}
-	s := struct{
-		User string `json:"user"`
-		Groups []string `json:"groups"`
-	}{User: req.Username, Groups: []string{"ldap"}}
-	b, _ := json.Marshal(s)
-	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "karmada_session",
-		Value:    string(b),
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		Expires:  time.Now().Add(24 * time.Hour),
-	})
+	router.WriteSessionCookie(c.Writer, router.SessionData{User: req.Username, Groups: []string{"ldap"}}, 24*time.Hour)
 	c.JSON(http.StatusOK, common.BaseResponse{Code: 200, Msg: "ok"})
 }
 
