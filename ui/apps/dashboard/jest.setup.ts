@@ -1,5 +1,12 @@
 import '@testing-library/jest-dom';
 
+// ensure base.ts has a path prefix during tests
+// @ts-ignore
+if (typeof window !== 'undefined') {
+  // @ts-ignore
+  window.__path_prefix__ = '';
+}
+
 class MockResizeObserver {
   observe() {}
   unobserve() {}

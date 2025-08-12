@@ -22,6 +22,7 @@ import _ from 'lodash';
 import { MainLayout } from '@/layout';
 import ErrorBoundary from '@/components/error';
 import Overview from '@/pages/overview';
+import { RequireRole } from '@/components/auth';
 import {
   MultiCloudConfig,
   MultiCloudNamespace,
@@ -146,7 +147,11 @@ export function getRoutes() {
           children: [
             {
               path: 'propagation-policy',
-              element: <MultiCloudPropagationPolicy />,
+              element: (
+                <RequireRole roles={['admin']}>
+                  <MultiCloudPropagationPolicy />
+                </RequireRole>
+              ),
               handle: {
                 sidebarKey: 'PROPAGATION-POLICY',
                 sidebarName: i18nInstance.t('a95abe7b8eeb55427547e764bf39f1c4'),
@@ -154,7 +159,11 @@ export function getRoutes() {
             },
             {
               path: 'override-policy',
-              element: <MultiCloudOverridePolicy />,
+              element: (
+                <RequireRole roles={['admin']}>
+                  <MultiCloudOverridePolicy />
+                </RequireRole>
+              ),
               handle: {
                 sidebarKey: 'OVERRIDE-POLICY',
                 sidebarName: i18nInstance.t('0a7e9443c41575378d2db1e288d3f1cb'),
@@ -164,7 +173,11 @@ export function getRoutes() {
         },
         {
           path: '/cluster-manage',
-          element: <ClusterManage />,
+          element: (
+            <RequireRole roles={['operator', 'admin']}>
+              <ClusterManage />
+            </RequireRole>
+          ),
           handle: {
             sidebarKey: 'CLUSTER-MANAGE',
             sidebarName: i18nInstance.t('74ea72bbd64d8251bbc2642cc38e7bb1'),

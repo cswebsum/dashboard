@@ -11,9 +11,10 @@ function getPercentColor(v: number): string {
 
 export interface ClusterListProps {
   onCreate?: () => void;
+  onEdit?: (cluster: Cluster) => void;
 }
 
-export const ClusterList: React.FC<ClusterListProps> = ({ onCreate }) => {
+export const ClusterList: React.FC<ClusterListProps> = ({ onCreate, onEdit }) => {
   const { data: clusters = [], isLoading } = useClusters();
   const del = useDeleteCluster();
 
@@ -74,9 +75,10 @@ export const ClusterList: React.FC<ClusterListProps> = ({ onCreate }) => {
     {
       title: 'Actions',
       key: 'op',
-      width: 180,
+      width: 220,
       render: (_: any, r: Cluster) => (
         <Space>
+          <Button onClick={() => onEdit?.(r)}>Edit</Button>
           <Button danger loading={del.isPending} onClick={() => del.mutate(r.objectMeta.name)}>
             Delete
           </Button>
