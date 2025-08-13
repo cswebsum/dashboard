@@ -46,6 +46,7 @@ import { GetResource } from '@/services/unstructured.ts';
 import { useDebounce } from '@uidotdev/usehooks';
 import { PolicyScope } from '@/services/base.ts';
 import useNamespace from '@/hooks/use-namespace.ts';
+import { PermissionGate } from '@/components/auth/PermissionGate';
 
 const PropagationPolicyManage = () => {
   const [filter, setFilter] = useState<{
@@ -329,27 +330,29 @@ const PropagationPolicyManage = () => {
           />
         </div>
         <div>
-          <Button
-            type={'primary'}
-            icon={<Icons.add width={16} height={16} />}
-            className="flex flex-row items-center"
-            onClick={() => {
-              setEditorDrawerData({
-                open: true,
-                mode: 'create',
-              });
-            }}
-          >
-            {filter.policyScope === PolicyScope.Namespace
-              ? i18nInstance.t(
+          <PermissionGate resource={filter.policyScope === PolicyScope.Namespace ? 'propagationpolicies' : 'clusterpropagationpolicies'} verb="create" group="policy.karmada.io" version="v1alpha1">
+            <Button
+              type={'primary'}
+              icon={<Icons.add width={16} height={16} />}
+              className="flex flex-row items-center"
+              onClick={() => {
+                setEditorDrawerData({
+                  open: true,
+                  mode: 'create',
+                });
+              }}
+            >
+              {filter.policyScope === PolicyScope.Namespace
+                ? i18nInstance.t(
                   '5ac6560da4f54522d590c5f8e939691b',
                   '新增调度策略',
                 )
-              : i18nInstance.t(
+                : i18nInstance.t(
                   '929e0cda9f7fdc960dafe6ef742ab088',
                   '新增集群调度策略',
                 )}
-          </Button>
+            </Button>
+          </PermissionGate>
         </div>
       </div>
 
